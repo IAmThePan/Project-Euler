@@ -1,10 +1,12 @@
-// Project Euler 85 in JavaScript
+// Project Euler problem 85 in JavaScript
 // https://projecteuler.net/problem=85
 
+//Calculates the number of possible rectangles for a grid size
 var numRectangles = function(x, y) {
 	return x * y * (x + 1) * (y + 1) / 4;
 }
 
+//Finds the area of the grid with the number of rectangles closest to maxSquares
 var maxArea = function(maxSquares){
 	var gridX = 0;
 	while (numRectangles(gridX + 1, gridX + 1) <= maxSquares) gridX++;
@@ -26,4 +28,5 @@ var maxArea = function(maxSquares){
 	return solution[0] * solution[1];
 }
 
-maxArea(2000000);
+//Find the result
+var result = maxArea(2000000);
