@@ -1,0 +1,148 @@
+<!doctype html>
+<head>
+</head>
+	<title>Tic Tac Toe</title>
+
+	<style>
+		h1, h4 {
+			text-align: center;
+		}
+		button {
+			margin: 0 auto;
+		}
+		table {
+			margin: 0 auto;
+			width: 450px;
+			border-spacing: 0px;
+			text-align: center;
+			font-size: 2em;
+		}
+		tr {
+			height: 150px;
+		}
+		td {
+			width: 150px;
+		}
+		tr:nth-child(2) td {
+			border-top: 1px solid black;
+			border-bottom: 1px solid black;
+		}
+		td:nth-child(2) {
+			border-right: 1px solid black;
+			border-left: 1px solid black;
+		}
+		td:hover {
+			background-color: grey;
+		}
+	</style>
+<body>
+	<h1>Play Tic Tac Toe</h1>
+	<h4 id="upper-text"></h4>
+	<table id="board-table">
+		<tr>
+			<td id="0"></td>
+			<td id="1"></td>
+			<td id="2"></td>
+		</tr>
+		<tr>
+			<td id="3"></td>
+			<td id="4"></td>
+			<td id="5"></td>
+		</tr>
+		<tr>
+			<td id="6"></td>
+			<td id="7"></td>
+			<td id="8"></td>
+		</tr>
+	</table>
+	<h4 id="lower-text"></h4>
+	<button id="new-game" type="button" onclick="app.initGame()">New Game</button>
+
+	<script>
+		var app = {
+			boardArray: [],
+			boardCells: document.getElementById("board-table").getElementsByTagName("td"),
+			gameTurn: "X"
+		};
+		app.initGame = function() {
+			app.boardArray = [];
+			app.boardArray.length = 9;
+			if (app.boardCells.length !== 9) return false;
+
+			document.getElementById("new-game").style.display = "none";
+			document.getElementById("lower-text").innerHTML = "";
+			app.gameTurn = "X";
+
+			var n;
+			for (n = 0; n < 9; n++)
+				app.boardCells[n].addEventListener("click", app.cellClick);
+
+			app.drawBoard();
+			return true;
+		};
+		app.drawBoard = function () {
+			if (app.boardArray.length !== 9) return false;
+			if (app.boardCells.length !== 9) return false;
+
+			var n;
+			for (n = 0; n < 9; n++) 
+				app.boardCells[n].innerHTML = app.boardArray[n] || "";
+
+			document.getElementById("upper-text").innerHTML = "It is " + app.gameTurn + "'s turn";
+
+			return true;
+		};
+		app.checkWin = function() {
+			if (app.boardArray.length !== 9) return false;
+
+			if ((app.gameTurn === app.boardArray[0] && app.gameTurn === app.boardArray[1] && app.gameTurn === app.boardArray[2]) || 
+				(app.gameTurn === app.boardArray[3] && app.gameTurn === app.boardArray[4] && app.gameTurn === app.boardArray[5]) ||
+				(app.gameTurn === app.boardArray[6] && app.gameTurn === app.boardArray[7] && app.gameTurn === app.boardArray[8]) ||
+				(app.gameTurn === app.boardArray[0] && app.gameTurn === app.boardArray[3] && app.gameTurn === app.boardArray[6]) ||
+				(app.gameTurn === app.boardArray[1] && app.gameTurn === app.boardArray[4] && app.gameTurn === app.boardArray[7]) ||
+				(app.gameTurn === app.boardArray[2] && app.gameTurn === app.boardArray[5] && app.gameTurn === app.boardArray[8]) ||
+				(app.gameTurn === app.boardArray[0] && app.gameTurn === app.boardArray[4] && app.gameTurn === app.boardArray[8]) ||
+				(app.gameTurn === app.boardArray[2] && app.gameTurn === app.boardArray[4] && app.gameTurn === app.boardArray[6])) {
+				return app.gameOver(app.gameTurn);
+			}
+
+			if (app.boardArray[0] && app.boardArray[1] && app.boardArray[2] && app.boardArray[3] && app.boardArray[4] && app.boardArray[5] && app.boardArray[6] && app.boardArray[7] && app.boardArray[8])
+				return app.gameOver("tie");
+		};
+		app.cellClick = function(event) {
+			if (app.boardArray.length !== 9) return false;
+			if (app.boardCells.length !== 9) return false;
+
+			var cellNumber = parseInt(this.id);
+			document.getElementById("lower-text").innerHTML = "";
+
+			if (app.boardCells[cellNumber].innerHTML) {
+				document.getElementById("lower-text").innerHTML = "Illegal Move"
+				return false;
+			}
+
+			app.boardArray[cellNumber] = app.gameTurn;
+
+			app.drawBoard();
+			app.checkWin();
+
+			app.gameTurn = (app.gameTurn === "X") ? "O" : "X";
+
+			return true;
+		};
+		app.gameOver = function(player) {
+			document.getElementById("upper-text").innerHTML = "Game Over";
+			(player === "tie") ?
+				document.getElementById("lower-text").innerHTML = "Tie. Nobody wins" :
+				document.getElementById("lower-text").innerHTML = player + " Wins!";
+
+
+			var n;
+			for (n = 0; n < 9; n++)
+				app.boardCells[n].removeEventListener("click", app.cellClick);
+			document.getElementById("new-game").style.display = "block";
+		};
+		
+		app.initGame();
+	</script>
+</body>
